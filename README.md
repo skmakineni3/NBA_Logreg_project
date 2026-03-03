@@ -36,6 +36,6 @@ where `Win=1` indicates the team won the game.
 - Accuracy improved from **0.6992 → 0.8577** (**+15.85 percentage points**)  
 - ROC-AUC improved from **0.7550 → 0.9298** (**+0.1748**)
 
-## Repository Structure (suggested)
+
 
 
