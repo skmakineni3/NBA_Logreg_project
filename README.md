@@ -1,41 +1,64 @@
-# NBA Win Prediction with Logistic Regression
+# 🏀 NBA Win Prediction with Logistic Regression
 
-Predict NBA game outcomes (win/loss) using logistic regression models built from game-level box score statistics. This project starts with a simple baseline model using points scored (PTS) and then extends to a multivariate model using multiple box-score features. The final model is evaluated with a stratified train/test split.
+Predicting NBA game outcomes (win/loss) from box-score statistics. The project starts with a one-feature baseline (points scored) and builds up to a multivariate model, raising **accuracy from 70% to 86%** and **ROC-AUC from 0.76 to 0.93**.
 
-## Project Overview
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
+![pandas](https://img.shields.io/badge/pandas-150458?logo=pandas&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
 
-**Goal:** Fit logistic regression models to estimate  
-\[
-\hat{y} = P(\text{Win}=1 \mid X)
-\]
-where `Win=1` indicates the team won the game.
+---
 
-**Why logistic regression?** It produces calibrated win probabilities and a natural decision rule via thresholding (e.g., predict win if \(\hat{y} \ge 0.5\)).
+## 🎯 Goal
 
-## Key Ideas and Modeling Choices
+Estimate the probability that a team wins a game, given its box-score stats:
 
-- **Baseline model:** Predict win probability from **PTS only**.
-- **Intercept (bias):** Included to allow the decision boundary to shift (more realistic than a no-intercept curve).
-- **Loss functions:** Compared **MSE** vs. **cross-entropy (log loss)** and visualized loss surfaces to understand optimization behavior.
-- **Leakage control:** Excluded `PLUS_MINUS` since it effectively encodes the outcome via point differential (would make results near-perfect but not meaningful for prediction).
-- **Multicollinearity note:** Box-score features (e.g., PTS, FGM, FGA, FG%) are strongly correlated, so individual coefficients may appear counterintuitive. Coefficients represent conditional effects and should be interpreted cautiously without regularization/feature selection.
+$$\hat{y} = P(\text{Win} = 1 \mid X)$$
 
-## Results (Stratified 80/20 Train/Test Split)
+**Why logistic regression?** It outputs win *probabilities*, not just labels, and gives a simple decision rule: predict a win when $\hat{y} \ge 0.5$. Its coefficients are also easy to interpret, which makes it a strong, transparent baseline.
 
-### Baseline: PTS-only Logistic Regression
-- **Test Accuracy:** 0.6992  
-- **ROC-AUC:** 0.7550  
-- **Log Loss:** 0.5952  
-- **Confusion Matrix:** \(\begin{bmatrix}177 & 69\\79 & 167\end{bmatrix}\)
+---
 
-### Full Model: Box-Score Features (FGM:PTS), excluding `PLUS_MINUS`
-- **Test Accuracy:** 0.8577  
-- **ROC-AUC:** 0.9298  
+## 📊 Results
 
-### Improvement Over Baseline
-- Accuracy improved from **0.6992 → 0.8577** (**+15.85 percentage points**)  
-- ROC-AUC improved from **0.7550 → 0.9298** (**+0.1748**)
+Evaluated on a **stratified 80/20 train/test split**.
 
+| Model | Features | Accuracy | ROC-AUC | Log Loss |
+|---|---|:---:|:---:|:---:|
+| Baseline | `PTS` only | 0.6992 | 0.7550 | 0.5952 |
+| **Full model** | Box score (`FGM` → `PTS`), excluding `PLUS_MINUS` | **0.8577** | **0.9298** | — |
+| **Improvement** | | **+15.9 pts** | **+0.175** | |
 
+<details>
+<summary><b>Baseline confusion matrix</b></summary>
 
+| | Predicted Loss | Predicted Win |
+|---|:---:|:---:|
+| **Actual Loss** | 177 | 69 |
+| **Actual Win** | 79 | 167 |
 
+</details>
+
+---
+
+## 🧠 Modeling Choices
+
+- **Baseline first.** A points-only model gives a reference point, so every added feature has to earn its place.
+- **Intercept included.** Lets the decision boundary shift instead of being forced through the origin.
+- **Loss functions compared.** Plotted the loss surfaces for **mean squared error** and **cross-entropy (log loss)** to show why cross-entropy is the right objective for classification: it's convex and gives well-behaved gradients.
+- **Leakage control.** Excluded `PLUS_MINUS`. It encodes the point differential, which effectively *is* the outcome, so it would make the model look near-perfect while being useless for prediction.
+- **Multicollinearity.** Box-score features like `PTS`, `FGM`, `FGA`, and `FG%` are strongly correlated, so some individual coefficients look counterintuitive. They are conditional effects and should be read with caution unless regularization or feature selection is applied.
+
+---
+
+## 🔭 Next Steps
+
+- Add **L1/L2 regularization** to stabilize coefficients under multicollinearity
+- Use **pre-game features** (rolling team averages, rest days, home/away) for true forecasting
+- Compare against tree-based models (random forest, gradient boosting)
+
+---
+
+## 📬 Contact
+
+**Suhas Makineni** · [GitHub](https://github.com/skmakineni3) · [skmakineni@gmail.com](mailto:skmakineni@gmail.com)
