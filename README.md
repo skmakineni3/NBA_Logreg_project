@@ -1,4 +1,5 @@
 # 🏀 NBA Win Prediction with Logistic Regression
+Author: Suhas Makineni
 
 Predicting NBA game outcomes (win/loss) from box-score statistics. The project starts with a one-feature baseline (points scored) and builds up to a multivariate model, raising **accuracy from 70% to 86%** and **ROC-AUC from 0.76 to 0.93**.
 
